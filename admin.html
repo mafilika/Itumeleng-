@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Admin</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#0e0e10;color:#f6f1e7;font:15px/1.5 Arial,sans-serif}
+#login{height:100vh;display:grid;place-items:center;text-align:center}
+#login div{border:1px solid #c9a24b66;padding:40px;width:320px}
+input,textarea{width:100%;padding:10px;background:#1a1a1e;border:1px solid #333;color:#f6f1e7;border-radius:4px;font:inherit;margin:4px 0 12px}
+input[type=color]{height:40px;padding:2px}
+button{background:#c9a24b;color:#0e0e10;border:0;padding:10px 18px;font-weight:700;border-radius:4px;cursor:pointer;margin:2px}
+button.g{background:#2a2a30;color:#f6f1e7}
+#bar{position:sticky;top:0;background:#16161a;border-bottom:1px solid #c9a24b66;padding:12px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;z-index:5}
+#bar b{color:#c9a24b}#form{max-width:860px;margin:30px auto;padding:0 20px 80px}
+.grp{border:1px solid #2a2a30;border-radius:8px;padding:8px 20px;margin-bottom:24px;background:#131316}
+.grp h3{color:#c9a24b;text-transform:capitalize}.grp>.grp,.item .grp{margin:10px 0}
+.item{border:1px dashed #444;padding:14px;margin:10px 0;border-radius:6px}
+label{font-size:12px;color:#aaa;text-transform:uppercase;letter-spacing:1px}
+h4{color:#c9a24b;text-transform:capitalize}#st{color:#7fd07f;font-size:13px;margin-left:10px}
+.thumb{height:50px;display:block;margin-bottom:6px}
+</style></head><body>
+<div id="login"><div><h2 style="color:#c9a24b">Admin Login</h2><input id="pw" type="password" placeholder="Password"><button onclick="login()">Login</button><p id="er" style="color:#e66"></p></div></div>
+<div id="main" style="display:none">
+<div id="bar"><div><b>Site Admin</b><span id="st"></span></div><div>
+<button class="g" onclick="window.open('index.html')">Preview Site</button>
+<button onclick="dl()">Download content.js</button>
+<button class="g" onclick="rs()">Reset to Defaults</button>
+<button class="g" onclick="sessionStorage.clear();location.reload()">Logout</button></div></div>
+<div id="form"></div></div>
+<script src="content.js"></script>
+<script>
+const PASS="admin123"; // CHANGE THIS before deploying
+let C;try{C=JSON.parse(localStorage.getItem('siteContent'))}catch(e){}C=C||JSON.parse(JSON.stringify(DEFAULTS));
+(function fill(d,t){for(const k in d){if(!(k in t))t[k]=d[k];else if(d[k]&&typeof d[k]=='object'&&!Array.isArray(d[k]))fill(d[k],t[k])}})(DEFAULTS,C);
+const $=id=>document.getElementById(id);
+function login(){if($('pw').value===PASS){sessionStorage.a=1;show()}else $('er').textContent='Wrong password'}
+$('pw').onkeydown=e=>{if(e.key==='Enter')login()};
+function show(){$('login').style.display='none';$('main').style.display='block';draw()}
+if(sessionStorage.a)show();
+function save(){try{localStorage.setItem('siteContent',JSON.stringify(C));$('st').textContent=' ✓ Saved (this browser)'}catch(e){$('st').textContent=' ⚠ Storage full – use image URLs instead of uploads'}}
+const lab=k=>k.replace(/([A-Z])/g,' $1');
+function blank(x){return Object.fromEntries(Object.keys(x).map(k=>[k,typeof x[k]=='number'?0:'']))}
+function draw(){$('form').innerHTML='';fields(C,$('form'))}
+function fields(o,el){Object.keys(o).forEach(k=>ed(o,k,el))}
+function ed(o,k,el){const v=o[k],row=document.createElement('div');
+ if(Array.isArray(v)){row.innerHTML=`<h4>${lab(k)}</h4>`;
+  v.forEach((it,i)=>{const b=document.createElement('div');b.className='item';fields(it,b);
+   const x=document.createElement('button');x.className='g';x.textContent='Remove';x.onclick=()=>{v.splice(i,1);save();draw()};b.append(x);row.append(b)});
+  const a=document.createElement('button');a.textContent='+ Add';a.onclick=()=>{v.push(blank(v[0]));save();draw()};row.append(a)}
+ else if(typeof v=='object'){row.className='grp';row.innerHTML=`<h3>${lab(k)}</h3>`;fields(v,row)}
+ else{const L=document.createElement('label');L.textContent=lab(k);row.append(L);
+  const col=/^#[0-9a-f]{6}$/i.test(v),img=/image|logo/i.test(k),long=String(v).length>60;
+  const inp=document.createElement(long&&!img?'textarea':'input');
+  if(long&&!img)inp.rows=4;if(col)inp.type='color';if(typeof v=='number')inp.type='number';
+  inp.value=v;inp.oninput=()=>{o[k]=typeof v=='number'?+inp.value:inp.value;save()};
+  if(img&&v&&!v.startsWith('data:image/svg')){const t=document.createElement('img');t.src=v;t.className='thumb';row.append(t)}
+  row.append(inp);
+  if(img){const f=document.createElement('input');f.type='file';f.accept='image/*';
+   f.onchange=()=>{const fr=new FileReader();fr.onload=()=>{o[k]=fr.result;save();draw()};fr.readAsDataURL(f.files[0])};
+   const s=document.createElement('label');s.textContent='…or upload (small files only; use URLs for big images)';row.append(s,f)}}
+ el.append(row)}
+function dl(){const b=new Blob(['window.DEFAULTS='+JSON.stringify(C,null,1)+';'],{type:'text/javascript'});
+ const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='content.js';a.click()}
+function rs(){if(confirm('Reset all content to defaults?')){localStorage.removeItem('siteContent');location.reload()}}
+</script></body></html>

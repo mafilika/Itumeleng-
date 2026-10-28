@@ -1,0 +1,10 @@
+window.DEFAULTS={
+brand:{name:"Your Company Name",tagline:"Building Legacies in Stone & Steel",logo:"",phone:"+27 00 000 0000",email:"info@yourcompany.co.za",address:"123 Placeholder Street, City, Country",hours:"Mon–Fri 08:00–17:00",whatsapp:"27000000000",whatsappMessage:"Hello, I would like to enquire about a construction project."},
+colors:{gold:"#c9a24b",dark:"#0e0e10",ivory:"#f6f1e7"},
+hero:{eyebrow:"Premium Construction",title:"We Build Spaces That Command Respect",text:"Placeholder: A short, confident sentence about what your company builds and the standard you hold yourself to.",image:"",button:"Request a Quote"},
+about:{heading:"About Us",text:"Placeholder: Tell your story here. Who founded the company, how long you have been building, and what makes your craftsmanship different. Replace this paragraph from the admin page.",image:"",stats:[{number:15,label:"Years Experience"},{number:250,label:"Projects Completed"},{number:120,label:"Happy Clients"},{number:40,label:"Team Members"}]},
+services:{heading:"Our Services",intro:"Placeholder: One line introducing the services you offer.",items:[{title:"Building & Construction",text:"Placeholder description of this service."},{title:"Renovations",text:"Placeholder description of this service."},{title:"Tiling & Finishes",text:"Placeholder description of this service."},{title:"Plumbing",text:"Placeholder description of this service."},{title:"Carpentry",text:"Placeholder description of this service."},{title:"Project Management",text:"Placeholder description of this service."}]},
+gallery:{heading:"Our Work",intro:"Placeholder: A selection of recent projects.",items:[{image:"",caption:"Project One"},{image:"",caption:"Project Two"},{image:"",caption:"Project Three"},{image:"",caption:"Project Four"},{image:"",caption:"Project Five"},{image:"",caption:"Project Six"}]},
+contact:{heading:"Let's Build Together",text:"Placeholder: Tell us about your project and we will respond within 24 hours.",button:"Send Enquiry"},
+footer:{text:"Placeholder: Short company statement for the footer.",copyright:"© 2026 Your Company Name. All rights reserved."}
+};
